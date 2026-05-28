@@ -1,3 +1,11 @@
+> **⚠️ FORK UYARISI / FORK NOTICE**
+> Bu depo, orijinal [SE-302-PROJE](https://github.com/arjinozceylan/SE-302-PROJE) projesinin kişisel geliştirme dalıdır.
+> Yapılan değişiklikler (Gradle modernizasyonu, JavaFX 21, jlink/jpackage desteği vb.) yalnızca bu fork'a aittir ve orijinal projeyi temsil etmez.
+>
+> *This repository is a personal development fork of the original SE-302-PROJE. Changes here (Gradle modernization, JavaFX 21, jlink/jpackage support, etc.) belong only to this fork and do not represent the original project.*
+
+---
+
 <div align="center">
 
 # 📅 Exam Scheduler System
@@ -84,6 +92,14 @@ scheduler/
 └── ui/           # JavaFX controllers, views, and theme logic
 ```
 ---
+
+## 📥 İndir / Download
+
+| Platform | İndir |
+|----------|-------|
+| Windows | [.msi](https://github.com/TalatKarasakal/sinav-programi-olusturma-uygulamasi/releases/latest/download/ExamScheduler.msi) |
+| macOS | [.dmg](https://github.com/TalatKarasakal/sinav-programi-olusturma-uygulamasi/releases/latest/download/ExamScheduler.dmg) |
+| Linux (Debian/Ubuntu) | [.deb](https://github.com/TalatKarasakal/sinav-programi-olusturma-uygulamasi/releases/latest/download/examscheduler.deb) |
 
 ## 🚀 How to Run
 

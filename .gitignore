@@ -10,6 +10,7 @@ bin/
 *.lock
 *.bin
 *.jar
+!gradle/wrapper/gradle-wrapper.jar
 *.war
 *.ear
 
@@ -35,3 +36,4 @@ bin/
 
 # --- WINDOWS ---
 Thumbs.db
+scheduler.db
