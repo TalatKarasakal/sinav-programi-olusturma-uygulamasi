@@ -44,8 +44,14 @@ test {
     def display = System.getenv('DISPLAY') ?: ':99'
     environment 'DISPLAY', display
     systemProperty 'display.available', System.getenv('DISPLAY') != null ? 'true' : 'false'
+}
 
-    // JavaFX modülleri test JVM'inde mevcut değilken --add-opens eklenmez
+jacocoTestReport {
+    dependsOn test
+    reports {
+        xml.required = true
+        html.required = true
+    }
 }
 
 application {
