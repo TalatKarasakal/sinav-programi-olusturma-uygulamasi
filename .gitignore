@@ -35,3 +35,4 @@ bin/
 
 # --- WINDOWS ---
 Thumbs.db
+scheduler.db
