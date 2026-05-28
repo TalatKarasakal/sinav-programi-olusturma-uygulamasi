@@ -1,7 +1,9 @@
 plugins {
     id 'java'
     id 'application'
-    id 'org.openjfx.javafxplugin' version '0.0.13'
+    id 'org.openjfx.javafxplugin' version '0.1.0'
+    id 'org.beryx.jlink' version '3.0.1'
+    id 'jacoco'
 }
 
 group = 'com.scheduler'
@@ -11,26 +13,46 @@ repositories {
     mavenCentral()
 }
 
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+javafx {
+    version = "21"
+    modules = ['javafx.controls', 'javafx.fxml']
+}
+
 dependencies {
     implementation 'org.xerial:sqlite-jdbc:3.47.0.0'
     implementation 'org.controlsfx:controlsfx:11.1.2'
     implementation 'org.apache.poi:poi-ooxml:5.2.5'
     implementation 'com.github.librepdf:openpdf:1.3.40'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
+    testImplementation 'org.testfx:testfx-core:4.0.18'
+    testImplementation 'org.testfx:testfx-junit5:4.0.18'
+    testImplementation 'org.mockito:mockito-core:5.10.0'
 }
 
-javafx {
-    version = "21.0.4"
-    modules = [ 'javafx.controls', 'javafx.fxml' ]
+test {
+    useJUnitPlatform()
+    finalizedBy jacocoTestReport
 }
 
 application {
     mainClass = 'scheduler.ui.Launcher'
+    mainModule = 'scheduler'
     applicationDefaultJvmArgs = ['-Dglass.disableGrab=true']
 }
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+jlink {
+    launcher {
+        name = 'PortfoyTakip'
+    }
+    jpackage {
+        installerType = project.findProperty('installerType')
+    }
 }
 
 sourceSets {

@@ -1,3 +1,11 @@
+> **⚠️ FORK UYARISI / FORK NOTICE**
+> Bu depo, orijinal [SE-302-PROJE](https://github.com/arjinozceylan/SE-302-PROJE) projesinin kişisel geliştirme dalıdır.
+> Yapılan değişiklikler (Gradle modernizasyonu, JavaFX 21, jlink/jpackage desteği vb.) yalnızca bu fork'a aittir ve orijinal projeyi temsil etmez.
+>
+> *This repository is a personal development fork of the original SE-302-PROJE. Changes here (Gradle modernization, JavaFX 21, jlink/jpackage support, etc.) belong only to this fork and do not represent the original project.*
+
+---
+
 <div align="center">
 
 # 📅 Exam Scheduler System
