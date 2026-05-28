@@ -93,6 +93,14 @@ scheduler/
 ```
 ---
 
+## 📥 İndir / Download
+
+| Platform | İndir |
+|----------|-------|
+| Windows | [.msi](https://github.com/TalatKarasakal/sinav-programi-olusturma-uygulamasi/releases/latest/download/ExamScheduler.msi) |
+| macOS | [.dmg](https://github.com/TalatKarasakal/sinav-programi-olusturma-uygulamasi/releases/latest/download/ExamScheduler.dmg) |
+| Linux (Debian/Ubuntu) | [.deb](https://github.com/TalatKarasakal/sinav-programi-olusturma-uygulamasi/releases/latest/download/examscheduler.deb) |
+
 ## 🚀 How to Run
 
 ### Prerequisites
