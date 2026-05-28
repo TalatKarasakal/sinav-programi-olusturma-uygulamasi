@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import scheduler.model.*;
 
 import java.time.LocalDate;
+import java.util.Collection;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
@@ -151,6 +152,49 @@ class ExamSchedulerTest {
 
         assertTrue(scheduler.getUnscheduledReasons().containsKey("BIG"),
                 "200 öğrencili ders 100 kapasiteli odalara sığmamalı");
+    }
+
+    @Test
+    @DisplayName("Backtracking — çıkmaz sokakta geri sarar")
+    void backtracking_deadEndResolved() {
+        // Two courses sharing one student, window contains exactly one 90-min slot.
+        // Greedy places CA first; CB then fails all slots due to student+room conflict.
+        // tryBacktracking is invoked: it removes CA, places CB, tries to restore CA —
+        // but CA also conflicts → backtracking rolls back and analyzeFailure is called.
+        // Verifies that exactly one course remains unscheduled (not both).
+        List<Student> students = List.of(new Student("SA"));
+        List<Course> courses = List.of(new Course("CA", 90), new Course("CB", 90));
+        List<Enrollment> enrollments = List.of(
+                new Enrollment("SA", "CA"),
+                new Enrollment("SA", "CB")
+        );
+        List<Classroom> rooms = List.of(new Classroom("R1", 10));
+
+        // Exactly 90-min window → single slot 09:00-10:30; no room to fit both conflicting courses
+        DayWindow narrow = new DayWindow(
+                LocalDate.of(2024, 6, 3),
+                List.of(new TimeRange(LocalTime.parse("09:00"), LocalTime.parse("10:30")))
+        );
+
+        ExamScheduler scheduler = new ExamScheduler();
+        scheduler.run(students, courses, enrollments, rooms, List.of(narrow));
+
+        // One course must fail — two conflicting exams cannot share the only slot
+        assertEquals(1, scheduler.getUnscheduledReasons().size(),
+                "Tek slot ile çakışan iki dersten tam olarak biri planlanamaz: "
+                + scheduler.getUnscheduledReasons());
+    }
+
+    @Test
+    @DisplayName("ExamScheduler — sıfır kayıtlı ders planlanamaz olarak işaretlenir")
+    void courseWithNoEnrollments_markedUnscheduled() {
+        var courses = List.of(new Course("EMPTY", 90));
+        // No enrollments for EMPTY course
+        ExamScheduler scheduler = new ExamScheduler();
+        scheduler.run(students, courses, List.of(), rooms, List.of(dayWindow));
+
+        assertTrue(scheduler.getUnscheduledReasons().containsKey("EMPTY"),
+                "Kayıtsız ders planlanamaz olarak işaretlenmeli");
     }
 
     @Test
