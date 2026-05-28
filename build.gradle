@@ -33,11 +33,19 @@ dependencies {
     testImplementation 'org.testfx:testfx-core:4.0.18'
     testImplementation 'org.testfx:testfx-junit5:4.0.18'
     testImplementation 'org.mockito:mockito-core:5.10.0'
+    testImplementation 'org.hamcrest:hamcrest:2.2'
 }
 
 test {
     useJUnitPlatform()
     finalizedBy jacocoTestReport
+
+    // Headless mode: TestFX with Xvfb when DISPLAY is set
+    def display = System.getenv('DISPLAY') ?: ':99'
+    environment 'DISPLAY', display
+    systemProperty 'display.available', System.getenv('DISPLAY') != null ? 'true' : 'false'
+
+    // JavaFX modülleri test JVM'inde mevcut değilken --add-opens eklenmez
 }
 
 application {
@@ -59,9 +67,18 @@ sourceSets {
     main {
         java {
             srcDirs = ['src']
+            exclude 'test/**'
         }
         resources {
             srcDirs = ['src/main/resources']
+        }
+    }
+    test {
+        java {
+            srcDirs = ['src/test/java']
+        }
+        resources {
+            srcDirs = ['src/test/resources']
         }
     }
 }
