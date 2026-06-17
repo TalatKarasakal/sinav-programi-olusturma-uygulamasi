@@ -45,6 +45,7 @@ Bu bölüm, orijinal proje ile bu kişisel fork'taki ek işleri birbirinden ayı
 * JavaFX arayüzü için TestFX smoke testi.
 * `scheduler.db` dosyasının kaynak kontrolden çıkarılması ve `.gitignore` kapsamının güncellenmesi.
 * Release indirme bağlantılarının README'ye eklenmesi.
+* `CsvDataLoader` sınıfındaki Türkçe işletim sistemi dil ayarlarında ortaya çıkan lokalizasyon hatasının (I/ı karakter bug'ı) düzeltilmesi.
 
 ---
 
