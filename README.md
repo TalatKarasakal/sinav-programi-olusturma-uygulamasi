@@ -1,8 +1,9 @@
-> **⚠️ FORK UYARISI / FORK NOTICE**
-> Bu depo, orijinal [SE-302-PROJE](https://github.com/arjinozceylan/SE-302-PROJE) projesinin kişisel geliştirme dalıdır.
-> Yapılan değişiklikler (Gradle modernizasyonu, JavaFX 21, jlink/jpackage desteği vb.) yalnızca bu fork'a aittir ve orijinal projeyi temsil etmez.
+> **FORK ATFI**
 >
-> *This repository is a personal development fork of the original SE-302-PROJE. Changes here (Gradle modernization, JavaFX 21, jlink/jpackage support, etc.) belong only to this fork and do not represent the original project.*
+> Bu repo [arjinozceylan/SE-302-PROJE](https://github.com/arjinozceylan/SE-302-PROJE) reposunun kişisel fork'udur.
+> Orijinal ekip: Arjin Özceylan, Gözde Yılıkyılmaz, Sıla Karabağ, Talat Karasakal ve Ayşenur İşler.
+> Orijinal projenin fikri, uygulama temeli, algoritma, arayüz, veritabanı, dışa aktarma ve test/dokümantasyon katkıları bu ekibe aittir.
+> Bu fork'taki ek geliştirmeler `enhanced-personal-fork` branch'inde işaretlidir ve orijinal projeyi temsil etmez.
 
 ---
 
@@ -29,6 +30,21 @@
 **Exam Scheduler System** is a sophisticated desktop application designed to automate the complex **University Exam Timetabling Problem**. Unlike simple manual schedulers, this system uses an intelligent **Greedy Algorithm enhanced with Backtracking** to generate conflict-free schedules that respect hard constraints (room capacity, student clashes) and optimize resource usage.
 
 The project features a **Layered Architecture** (Model-View-Controller-DAO pattern) ensuring separation of concerns, maintainability, and scalability.
+
+---
+
+## Bu fork'taki geliştirmeler
+
+Bu bölüm, orijinal proje ile bu kişisel fork'taki ek işleri birbirinden ayırmak için tutulur. Aşağıdaki maddeler `enhanced-personal-fork` branch'inde yapılan ek geliştirmelerdir:
+
+* Gradle yapılandırmasının güncellenmesi ve wrapper dosyalarının modernleştirilmesi.
+* JavaFX 21 uyumluluğu, modüler çalışma yapısı ve paketleme hazırlıkları.
+* `jlink` / `jpackage` desteğiyle Windows, macOS ve Linux için yerel kurulum paketi üretimi.
+* GitHub Actions üzerinde Gradle CI ve release workflow düzenlemeleri.
+* Çekirdek algoritma, kısıtlar, model, CSV yükleme ve veritabanı katmanı için JUnit testleri.
+* JavaFX arayüzü için TestFX smoke testi.
+* `scheduler.db` dosyasının kaynak kontrolden çıkarılması ve `.gitignore` kapsamının güncellenmesi.
+* Release indirme bağlantılarının README'ye eklenmesi.
 
 ---
 
@@ -152,4 +168,6 @@ This project was collaboratively developed by:
 
 ## 📝 License
 
-This project is created for educational purposes within the scope of the **SE 302** course at **Izmir University of Economics**.
+Orijinal [arjinozceylan/SE-302-PROJE](https://github.com/arjinozceylan/SE-302-PROJE) reposunda bir `LICENSE` dosyası bulunmamaktadır. Bu nedenle bu fork'a ayrıca bir lisans eklenmemiştir.
+
+Bu proje **Izmir University of Economics** bünyesindeki **SE 302** dersi kapsamında eğitim amaçlı hazırlanmıştır. Kullanım, yeniden dağıtım veya lisanslama için orijinal proje sahiplerinden izin alınması gerekebilir.
