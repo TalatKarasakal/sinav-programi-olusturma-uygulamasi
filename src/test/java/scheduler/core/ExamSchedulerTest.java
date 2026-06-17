@@ -10,6 +10,7 @@ import java.util.Collection;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -208,5 +209,170 @@ class ExamSchedulerTest {
                 students, courses, enrollments, rooms, List.of());
 
         assertTrue(result.isEmpty());
+    }
+
+    @Test
+    @DisplayName("Backtracking — kurban derslerin kaldırılıp daha sonra alternatif slotlarda başarıyla planlanması (multiple victims)")
+    void tryBacktracking_multipleVictims() {
+        List<Student> testStudents = List.of(
+            new Student("S1"),
+            new Student("S2"),
+            new Student("S3"),
+            new Student("S_HEAVY")
+        );
+        
+        Course c1 = new Course("C1", 90);
+        c1.setMaxRoomCapacity(20);
+        
+        Course c2 = new Course("C2", 90);
+        c2.setMaxRoomCapacity(20);
+        
+        Course c3 = new Course("C3", 90);
+        c3.setMaxRoomCapacity(20);
+        
+        Course cHeavy = new Course("C_HEAVY", 90);
+        
+        List<Course> testCourses = List.of(c1, c2, c3, cHeavy);
+        
+        List<Enrollment> testEnrollments = List.of(
+            new Enrollment("S1", "C1"),
+            new Enrollment("S3", "C1"),
+            new Enrollment("S1", "C2"),
+            new Enrollment("S2", "C2"),
+            new Enrollment("S2", "C3"),
+            new Enrollment("S3", "C3"),
+            new Enrollment("S_HEAVY", "C_HEAVY")
+        );
+        List<Enrollment> enrollmentsMutable = new java.util.ArrayList<>(testEnrollments);
+        for (int i = 0; i < 169; i++) {
+            enrollmentsMutable.add(new Enrollment("S_HEAVY_" + i, "C_HEAVY"));
+        }
+        
+        List<Classroom> testRooms = List.of(
+            new Classroom("R1", 100),
+            new Classroom("R2", 60),
+            new Classroom("R3", 10)
+        );
+        
+        DayWindow day1 = new DayWindow(LocalDate.of(2024, 6, 10), List.of(
+            new TimeRange(LocalTime.parse("09:00"), LocalTime.parse("10:30"))
+        ));
+        DayWindow day2 = new DayWindow(LocalDate.of(2024, 6, 11), List.of(
+            new TimeRange(LocalTime.parse("09:00"), LocalTime.parse("10:30"))
+        ));
+        DayWindow day3 = new DayWindow(LocalDate.of(2024, 6, 12), List.of(
+            new TimeRange(LocalTime.parse("09:00"), LocalTime.parse("10:30"))
+        ));
+        DayWindow day4 = new DayWindow(LocalDate.of(2024, 6, 13), List.of(
+            new TimeRange(LocalTime.parse("09:00"), LocalTime.parse("10:30"))
+        ));
+        
+        ExamScheduler scheduler = new ExamScheduler();
+        Map<String, List<StudentExam>> result = scheduler.run(
+            testStudents, testCourses, enrollmentsMutable, testRooms, List.of(day1, day2, day3, day4)
+        );
+        
+        System.out.println("DEBUG - Result: " + result);
+        System.out.println("DEBUG - Unscheduled reasons: " + scheduler.getUnscheduledReasons());
+        assertTrue(scheduler.getUnscheduledReasons().isEmpty(), 
+            "Backtracking tüm sınavları planlayabilmeliydi. Planlanamayanlar: " + scheduler.getUnscheduledReasons());
+    }
+
+    @Test
+    @DisplayName("Constraint — günlük maksimum sınav limiti (default 2) ve öğrenci çakışma tespiti entegrasyonu")
+    void maxExamsPerDay_withStudentConflicts() {
+        List<Student> testStudents = List.of(new Student("S1"));
+        List<Course> testCourses = List.of(
+            new Course("C1", 90),
+            new Course("C2", 90),
+            new Course("C3", 90)
+        );
+        List<Enrollment> testEnrollments = List.of(
+            new Enrollment("S1", "C1"),
+            new Enrollment("S1", "C2"),
+            new Enrollment("S1", "C3")
+        );
+        List<Classroom> testRooms = List.of(new Classroom("R1", 100));
+        
+        DayWindow singleDay = new DayWindow(LocalDate.of(2024, 6, 10), List.of(
+            new TimeRange(LocalTime.parse("09:00"), LocalTime.parse("13:30"))
+        ));
+        
+        ExamScheduler scheduler = new ExamScheduler();
+        Map<String, List<StudentExam>> result = scheduler.run(
+            testStudents, testCourses, testEnrollments, testRooms, List.of(singleDay)
+        );
+        
+        List<StudentExam> s1Exams = result.get("S1");
+        assertTrue(s1Exams == null || s1Exams.size() <= 2, "Günde 2'den fazla sınav planlanmamalı");
+        
+        assertEquals(1, scheduler.getUnscheduledReasons().size(), "1 ders planlanamamış olmalı");
+        
+        String reason = scheduler.getUnscheduledReasons().values().iterator().next();
+        assertTrue(reason.toLowerCase(Locale.ROOT).contains("limit") || reason.toLowerCase(Locale.ROOT).contains("exams") || reason.toLowerCase(Locale.ROOT).contains("constraint"),
+            "Hata sebebi kısıt ihlali içermeli: " + reason);
+    }
+
+    @Test
+    @DisplayName("Constraint — aynı gün sınavı olan ortak öğrencili dersler arasında minimum süre boşluğu (MIN_GAP_MINUTES = 60)")
+    void studentClash_gapConstraints() {
+        List<Student> testStudents = List.of(new Student("S1"));
+        List<Course> testCourses = List.of(
+            new Course("C1", 90),
+            new Course("C2", 90)
+        );
+        List<Enrollment> testEnrollments = List.of(
+            new Enrollment("S1", "C1"),
+            new Enrollment("S1", "C2")
+        );
+        List<Classroom> testRooms = List.of(new Classroom("R1", 100));
+        
+        DayWindow narrowDay = new DayWindow(LocalDate.of(2024, 6, 10), List.of(
+            new TimeRange(LocalTime.parse("09:00"), LocalTime.parse("12:30"))
+        ));
+        
+        ExamScheduler schedulerNarrow = new ExamScheduler();
+        schedulerNarrow.run(testStudents, testCourses, testEnrollments, testRooms, List.of(narrowDay));
+        assertEquals(1, schedulerNarrow.getUnscheduledReasons().size(), "Gap kısıtı yüzünden 1 sınav planlanamamalı");
+        
+        DayWindow wideDay = new DayWindow(LocalDate.of(2024, 6, 10), List.of(
+            new TimeRange(LocalTime.parse("09:00"), LocalTime.parse("13:00"))
+        ));
+        
+        ExamScheduler schedulerWide = new ExamScheduler();
+        Map<String, List<StudentExam>> resultWide = schedulerWide.run(
+            testStudents, testCourses, testEnrollments, testRooms, List.of(wideDay)
+        );
+        assertTrue(schedulerWide.getUnscheduledReasons().isEmpty(), "Geniş pencerede her iki sınav da planlanabilmeli");
+        assertEquals(2, resultWide.get("S1").size(), "Her iki sınav da planlanmalı");
+    }
+
+    @Test
+    @DisplayName("Conflict — kesinlikle çakışan ve sığmayan derslerin tespiti (No valid timeslots)")
+    void conflictDetection_noValidTimeslots() {
+        List<Student> testStudents = List.of(new Student("S1"));
+        List<Course> testCourses = List.of(
+            new Course("C1", 90),
+            new Course("C2", 90)
+        );
+        List<Enrollment> testEnrollments = List.of(
+            new Enrollment("S1", "C1"),
+            new Enrollment("S1", "C2")
+        );
+        List<Classroom> testRooms = List.of(new Classroom("R1", 100));
+        
+        DayWindow singleSlotDay = new DayWindow(LocalDate.of(2024, 6, 10), List.of(
+            new TimeRange(LocalTime.parse("09:00"), LocalTime.parse("10:30"))
+        ));
+        
+        ExamScheduler scheduler = new ExamScheduler();
+        scheduler.run(testStudents, testCourses, testEnrollments, testRooms, List.of(singleSlotDay));
+        
+        assertEquals(1, scheduler.getUnscheduledReasons().size(), "Çakışan derslerden biri planlanamamış olmalı");
+        
+        String failedCourse = scheduler.getUnscheduledReasons().keySet().iterator().next();
+        String reason = scheduler.getUnscheduledReasons().get(failedCourse);
+        assertTrue(reason.toLowerCase(Locale.ROOT).contains("error") || reason.toLowerCase(Locale.ROOT).contains("constraint") || reason.toLowerCase(Locale.ROOT).contains("clash"),
+            "Hata açıklaması çakışma/kısıt hatası belirtmeli: " + reason);
     }
 }

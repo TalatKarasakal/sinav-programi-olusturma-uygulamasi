@@ -25,7 +25,7 @@ public class CsvDataLoader {
                 String t = stripBom(line).trim();
                 if (t.isEmpty()) continue;
 
-                String lower = t.toLowerCase();
+                String lower = t.toLowerCase(Locale.ROOT);
                 if (lower.startsWith("all of") || lower.startsWith("list of")) continue;
 
                 // normalize delimiters
@@ -35,7 +35,7 @@ public class CsvDataLoader {
 
                 String p0raw = stripBom(parts[0]).trim();
                 if (p0raw.isEmpty()) continue;
-                String p0 = p0raw.toLowerCase();
+                String p0 = p0raw.toLowerCase(Locale.ROOT);
 
                 // header lines
                 if (p0.contains("student") && p0.contains("id")) continue;
@@ -87,7 +87,7 @@ public class CsvDataLoader {
                 String t = stripBom(line).trim();
                 if (t.isEmpty()) continue;
 
-                String lower = t.toLowerCase();
+                String lower = t.toLowerCase(Locale.ROOT);
                 if (lower.startsWith("all of") || lower.startsWith("list of")) continue;
 
                 String norm = t.replace('\t', ';').replace(',', ';');
@@ -96,7 +96,7 @@ public class CsvDataLoader {
 
                 String p0 = stripBom(parts[0]).trim();
                 if (p0.isEmpty()) continue;
-                String p0l = p0.toLowerCase();
+                String p0l = p0.toLowerCase(Locale.ROOT);
                 if ((p0l.contains("course") && p0l.contains("id")) || p0l.contains("course code")) continue;
 
                 String id = normalizeCourseId(p0);
@@ -125,7 +125,7 @@ public class CsvDataLoader {
                 String t = stripBom(line).trim();
                 if (t.isEmpty()) continue;
 
-                String lower = t.toLowerCase();
+                String lower = t.toLowerCase(Locale.ROOT);
                 if (lower.startsWith("all of") || lower.startsWith("list of")) continue;
 
                 String norm = t.replace('\t', ';').replace(',', ';');
@@ -135,8 +135,8 @@ public class CsvDataLoader {
                 String roomId = stripBom(parts[0]).trim().replace("\"", "").replace("'", "");
                 if (roomId.isEmpty()) continue;
 
-                String roomIdLower = roomId.toLowerCase();
-                String capCellLower = stripBom(parts[1]).trim().toLowerCase();
+                String roomIdLower = roomId.toLowerCase(Locale.ROOT);
+                String capCellLower = stripBom(parts[1]).trim().toLowerCase(Locale.ROOT);
 
                 // header like: classroom;capacity
                 if ((roomIdLower.contains("classroom") || roomIdLower.contains("room")) && capCellLower.contains("capacity")) {
@@ -175,7 +175,7 @@ public class CsvDataLoader {
                 String t = stripBom(line).trim();
                 if (t.isEmpty()) continue;
 
-                String lower = t.toLowerCase();
+                String lower = t.toLowerCase(Locale.ROOT);
                 if (lower.startsWith("all of") || lower.contains("attendance lists") || lower.contains("students in the system")) {
                     continue;
                 }
@@ -222,8 +222,8 @@ public class CsvDataLoader {
 
                 if (a.isEmpty() || b.isEmpty()) continue;
 
-                String aL = a.toLowerCase();
-                String bL = b.toLowerCase();
+                String aL = a.toLowerCase(Locale.ROOT);
+                String bL = b.toLowerCase(Locale.ROOT);
 
                 // header line
                 boolean header = (aL.contains("student") && aL.contains("id")) && (bL.contains("course") && bL.contains("id"));
@@ -269,7 +269,7 @@ public class CsvDataLoader {
             String sid = e.getStudentId() == null ? "" : e.getStudentId().trim();
             String cid = e.getCourseId() == null ? "" : e.getCourseId().trim();
             if (sid.isEmpty() || cid.isEmpty()) continue;
-            String key = (sid + "||" + cid).toLowerCase();
+            String key = (sid + "||" + cid).toLowerCase(Locale.ROOT);
             if (seen.add(key)) {
                 result.add(e);
             }
