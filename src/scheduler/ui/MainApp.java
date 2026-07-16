@@ -144,7 +144,7 @@ public class MainApp extends Application {
         showStudentList(); // Tablo boş gelecek ve "Files are ready" mesajı çıkacak
 
         Scene scene = new Scene(mainStack, 1224, 816);
-        primaryStage.setTitle("MainApp - Exam Management System");
+        primaryStage.setTitle("Sınav Programı Oluşturma");
         primaryStage.setScene(scene);
         applyTheme();
         primaryStage.show();
@@ -176,13 +176,13 @@ public class MainApp extends Application {
                 "-fx-background-color: #D11212; -fx-padding: 6 10 6 10; -fx-background-radius: 15; -fx-font-weight: bold; -fx-font-size: 12px;");
         lblErrorCount.setOnMouseClicked(e -> showErrorLogDialog());
 
-        btnImport = createStyledButton("Import");
+        btnImport = createStyledButton("İçe Aktar");
         btnImport.setOnAction(e -> showImportDialog(primaryStage));
 
-        btnExport = createStyledButton("Export");
+        btnExport = createStyledButton("Dışa Aktar");
         btnExport.setOnAction(e -> showExportDialog(primaryStage));
 
-        btnApply = createStyledButton("Apply Schedule");
+        btnApply = createStyledButton("Programı Uygula");
         if (btnApply != null) {
             btnApply.setStyle("-fx-background-color: " + ACCENT_COLOR
                     + "; -fx-text-fill: white; -fx-font-weight: bold; -fx-border-color: limegreen; -fx-border-width: 1px; -fx-border-radius: 5;");
@@ -190,7 +190,7 @@ public class MainApp extends Application {
         btnApply.setOnAction(e -> runSchedulerLogic(true));
 
         // Arama
-        txtSearch = createStyledTextField("Search...");
+        txtSearch = createStyledTextField("Ara...");
         txtSearch.setPrefWidth(200);
         txtSearch.setMaxWidth(Double.MAX_VALUE);
         HBox.setHgrow(txtSearch, Priority.ALWAYS);
@@ -198,10 +198,10 @@ public class MainApp extends Application {
 
         // Filtreler
         HBox filters = new HBox(0);
-        tglStudents = createStyledToggleButton("Students");
-        tglExams = createStyledToggleButton("Exams");
-        tglDays = createStyledToggleButton("Days");
-        tglClassrooms = createStyledToggleButton("Classrooms");
+        tglStudents = createStyledToggleButton("Öğrenciler");
+        tglExams = createStyledToggleButton("Sınavlar");
+        tglDays = createStyledToggleButton("Gün");
+        tglClassrooms = createStyledToggleButton("Derslikler");
 
         tglStudents.setStyle("-fx-background-radius: 5 0 0 5; -fx-border-radius: 5 0 0 5; -fx-border-width: 1 0 1 1;");
         tglExams.setStyle("-fx-background-radius: 0; -fx-border-radius: 0; -fx-border-width: 1 0 1 1;");
@@ -265,13 +265,13 @@ public class MainApp extends Application {
 
         // --- A) Period Settings Card ---
         // İçerik elemanları
-        Label lblStart = new Label("Start Date:");
+        Label lblStart = new Label("Başlangıç Tarihi:");
         startDate = new DatePicker(LocalDate.now());
         startDate.setMaxWidth(Double.MAX_VALUE);
 
         HBox toggleBox = new HBox(15);
-        RadioButton rbDuration = new RadioButton("By Duration");
-        RadioButton rbDates = new RadioButton("By End Date");
+        RadioButton rbDuration = new RadioButton("Süreye Göre");
+        RadioButton rbDates = new RadioButton("Bitiş Tarihine Göre");
         ToggleGroup groupPeriod = new ToggleGroup();
         rbDuration.setToggleGroup(groupPeriod);
         rbDates.setToggleGroup(groupPeriod);
@@ -281,13 +281,13 @@ public class MainApp extends Application {
         VBox inputContainer = new VBox(10);
 
         VBox durBox = new VBox(2);
-        Label lblDays = new Label("Duration (Days):");
+        Label lblDays = new Label("Süre (Gün):");
         txtDays = createStyledTextField("9");
         txtDays.setText("9");
         durBox.getChildren().addAll(lblDays, txtDays);
 
         VBox endBox = new VBox(2);
-        Label lblEnd = new Label("End Date:");
+        Label lblEnd = new Label("Bitiş Tarihi:");
         endDate = new DatePicker(LocalDate.now().plusDays(9));
         endDate.setMaxWidth(Double.MAX_VALUE);
         endBox.getChildren().addAll(lblEnd, endDate);
@@ -334,17 +334,17 @@ public class MainApp extends Application {
 
         // KART OLUŞTURMA
         VBox cardDate = createCard(
-                " Period Settings",
-                "Configure the overall date range for exams.",
-                "Duration (Days): Sets the total length of the exam period.\nDate Range: Automatically updates based on Duration. Defines the start and end dates.",
+                " Dönem Ayarları",
+                "Sınavların genel tarih aralığını ayarlayın.",
+                "Süre (Gün): Sınav döneminin toplam uzunluğunu belirler.\nTarih Aralığı: Süreye göre otomatik güncellenir; başlangıç ve bitiş tarihlerini tanımlar.",
                 lblStart, startDate, toggleBox, inputContainer);
 
         // --- B) Constraints Card ---
-        lblBlockTime = new Label("Exam Duration (min):");
+        lblBlockTime = new Label("Sınav Süresi (dk):");
         txtBlockTime = createStyledTextField("90");
         txtBlockTime.setText("90");
 
-        lblTime = new Label("Working Hours:");
+        lblTime = new Label("Çalışma Saatleri:");
         HBox timeInputs = new HBox(5);
         txtTimeStart = createStyledTextField("09:00");
         txtTimeEnd = createStyledTextField("17:00");
@@ -353,20 +353,20 @@ public class MainApp extends Application {
         timeInputs.getChildren().addAll(txtTimeStart, txtTimeEnd);
 
         VBox cardConstraints = createCard(
-                "\u23F1\uFE0F Constraints",
-                "Set default duration and daily working hours.",
-                "Default Duration: Used for courses that do NOT have a duration specified in the CSV file (e.g., 90 min).\nTime Range: The daily working hours (e.g., 09:00 - 17:00).",
+                "\u23F1\uFE0F Kısıtlar",
+                "Varsayılan süreyi ve günlük çalışma saatlerini ayarlayın.",
+                "Varsayılan Süre: CSV dosyasında süresi belirtilmeyen dersler için kullanılır (ör. 90 dk).\nSaat Aralığı: Günlük çalışma saatleri (ör. 09:00 - 17:00).",
                 lblBlockTime, txtBlockTime, lblTime, timeInputs);
 
         // --- C) Customization Card ---
-        btnCustomize = new Button("Advanced Rules \u2699");
+        btnCustomize = new Button("Gelişmiş Kurallar \u2699");
         btnCustomize.setMaxWidth(Double.MAX_VALUE);
         btnCustomize.setOnAction(e -> showCustomizationDialog(primaryStage));
 
         VBox cardCustom = createCard(
-                "\u2699\uFE0F Customization",
-                "Define exceptions for capacity & duration.",
-                "Click this button to manually override settings for specific courses. For example, you can force 'CS101' to have a duration of 120 mins or require a room with a minimum capacity of 50.",
+                "\u2699\uFE0F Özelleştirme",
+                "Kapasite ve süre için istisnalar tanımlayın.",
+                "Belirli dersler için ayarları elle değiştirmek için bu düğmeye tıklayın. Örneğin 'CS101' dersinin süresini 120 dk yapabilir ya da en az 50 kapasiteli bir derslik zorunlu kılabilirsiniz.",
                 btnCustomize);
 
         // Kartları Ekle
@@ -400,7 +400,7 @@ public class MainApp extends Application {
         ProgressIndicator pi = new ProgressIndicator();
         pi.setMaxSize(60, 60);
         pi.setStyle("-fx-progress-color: " + ACCENT_COLOR + ";");
-        Label lblLoad = new Label("Processing Data...");
+        Label lblLoad = new Label("Veri İşleniyor...");
         lblLoad.setFont(Font.font("Arial", FontWeight.BOLD, 18));
         lblLoad.setTextFill(Color.WHITE);
         lblLoad.setEffect(new DropShadow(5, Color.BLACK));
@@ -532,7 +532,7 @@ public class MainApp extends Application {
         Stage dialog = new Stage();
         dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.initOwner(root.getScene().getWindow());
-        dialog.setTitle("Error Log");
+        dialog.setTitle("Hata Günlüğü");
 
         VBox layout = new VBox(10);
         layout.setPadding(new Insets(15));
@@ -577,7 +577,7 @@ public class MainApp extends Application {
         HBox btnBox = new HBox(10);
         btnBox.setAlignment(Pos.CENTER_RIGHT);
 
-        Button btnClear = new Button("Clear Log");
+        Button btnClear = new Button("Günlüğü Temizle");
         btnClear.setStyle("-fx-background-color: #D32F2F; -fx-text-fill: white; -fx-font-weight: bold;");
         btnClear.setOnAction(e -> {
             errorLog.clear();
@@ -585,7 +585,7 @@ public class MainApp extends Application {
             dialog.close();
         });
 
-        Button btnClose = new Button("Close");
+        Button btnClose = new Button("Kapat");
         btnClose.setStyle(
                 "-fx-background-color: " + (isDarkMode ? DARK_BTN : LIGHT_BTN) + "; -fx-text-fill: " + text + ";");
         btnClose.setOnAction(e -> dialog.close());
@@ -745,8 +745,8 @@ public class MainApp extends Application {
                 for (File file : newFiles) {
                     FileType ft = detectFileType(file);
                     String type = switch (ft) {
-                        case STUDENTS -> "Students";
-                        case COURSES -> "Courses";
+                        case STUDENTS -> "Öğrenciler";
+                        case COURSES -> "Dersler";
                         case ROOMS -> "Rooms";
                         case LINKS -> "Links";
                         default -> "Unknown";
@@ -1357,7 +1357,7 @@ public class MainApp extends Application {
         HBox header = new HBox(15);
         header.setAlignment(Pos.CENTER_LEFT);
 
-        Button btnBack = new Button("\u2190 Back to Exams");
+        Button btnBack = new Button("\u2190 Sınavlara Dön");
         btnBack.setStyle("-fx-background-color: " + btnColor + "; -fx-text-fill: " + text
                 + "; -fx-background-radius: 4; -fx-border-color: #666; -fx-border-radius: 4;");
         btnBack.setOnAction(e -> showExamList());
@@ -1374,7 +1374,7 @@ public class MainApp extends Application {
             if (reason == null || reason.isBlank())
                 reason = status;
 
-            Label lblReason = new Label("Reason: " + reason);
+            Label lblReason = new Label("Sebep: " + reason);
             lblReason.setWrapText(true);
             lblReason.setMaxWidth(900);
             lblReason.setTextFill(Color.web(isDarkMode ? "#FF6B6B" : "#D32F2F"));
@@ -1408,7 +1408,7 @@ public class MainApp extends Application {
         });
 
         if (sortedRooms.isEmpty()) {
-            Label emptyLbl = new Label("No students enrolled or scheduled.");
+            Label emptyLbl = new Label("Kayıtlı veya planlanmış öğrenci yok.");
             emptyLbl.setTextFill(Color.GRAY);
             contentBox.getChildren().add(emptyLbl);
         }
@@ -1428,7 +1428,7 @@ public class MainApp extends Application {
             styleTableView(roomTable);
             roomTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
 
-            TableColumn<Student, String> colId = new TableColumn<>("Student ID");
+            TableColumn<Student, String> colId = new TableColumn<>("Öğrenci No");
             colId.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getId()));
 
             roomTable.getColumns().add(colId);
@@ -1493,7 +1493,7 @@ public class MainApp extends Application {
         styleTableView(table);
 
         // 1. ID Sütunu
-        TableColumn<Student, String> colId = new TableColumn<>("Student ID");
+        TableColumn<Student, String> colId = new TableColumn<>("Öğrenci No");
         colId.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getId()));
         colId.setPrefWidth(120);
 
@@ -1508,7 +1508,7 @@ public class MainApp extends Application {
         }
 
         // 3. Exam Count
-        TableColumn<Student, String> colExamCount = new TableColumn<>("Exams");
+        TableColumn<Student, String> colExamCount = new TableColumn<>("Sınavlar");
         colExamCount.setCellValueFactory(cell -> {
             String sid = cell.getValue().getId();
             List<StudentExam> exams = studentScheduleMap.getOrDefault(sid, Collections.emptyList());
@@ -1518,7 +1518,7 @@ public class MainApp extends Application {
         colExamCount.setPrefWidth(70);
 
         // 4. Start Date (YENİ) - Öğrencinin ilk sınav tarihi
-        TableColumn<Student, String> colStart = new TableColumn<>("First Exam");
+        TableColumn<Student, String> colStart = new TableColumn<>("İlk Sınav");
         colStart.setCellValueFactory(cell -> {
             String sid = cell.getValue().getId();
             List<StudentExam> exams = studentScheduleMap.getOrDefault(sid, Collections.emptyList());
@@ -1536,7 +1536,7 @@ public class MainApp extends Application {
         colStart.setPrefWidth(100);
 
         // 5. End Date (YENİ) - Öğrencinin son sınav tarihi
-        TableColumn<Student, String> colEnd = new TableColumn<>("Last Exam");
+        TableColumn<Student, String> colEnd = new TableColumn<>("Son Sınav");
         colEnd.setCellValueFactory(cell -> {
             String sid = cell.getValue().getId();
             List<StudentExam> exams = studentScheduleMap.getOrDefault(sid, Collections.emptyList());
@@ -1589,12 +1589,12 @@ public class MainApp extends Application {
         header.setAlignment(Pos.CENTER_LEFT);
 
         // Geri Butonu
-        Button btnBack = new Button("\u2190 Back List");
+        Button btnBack = new Button("\u2190 Listeye Dön");
         btnBack.setStyle("-fx-background-color: " + btnColor + "; -fx-text-fill: " + text
                 + "; -fx-background-radius: 4; -fx-border-color: #666; -fx-border-radius: 4;");
         btnBack.setOnAction(e -> showStudentList());
 
-        Button btnExport = new Button("Export CSV");
+        Button btnExport = new Button("CSV Dışa Aktar");
         btnExport.setStyle(
                 "-fx-background-color: #28a745; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 4;");
         btnExport.setOnAction(e -> exportSingleStudentSchedule(student));
@@ -1608,12 +1608,12 @@ public class MainApp extends Application {
 
         TableView<StudentExam> detailTable = new TableView<>();
         styleTableView(detailTable);
-        detailTable.setPlaceholder(new Label("No exams scheduled for this student."));
+        detailTable.setPlaceholder(new Label("Bu öğrenci için planlanmış sınav yok."));
 
-        TableColumn<StudentExam, String> colCourse = new TableColumn<>("Course");
+        TableColumn<StudentExam, String> colCourse = new TableColumn<>("Ders");
         colCourse.setCellValueFactory(new PropertyValueFactory<>("courseId"));
 
-        TableColumn<StudentExam, String> colDate = new TableColumn<>("Date");
+        TableColumn<StudentExam, String> colDate = new TableColumn<>("Tarih");
         colDate.setCellValueFactory(
                 cell -> new SimpleStringProperty(cell.getValue().getTimeslot().getDate().toString()));
 
@@ -1691,18 +1691,18 @@ public class MainApp extends Application {
 
         // Kolonlar
 
-        TableColumn<Course, String> colCode = new TableColumn<>("Course Code");
+        TableColumn<Course, String> colCode = new TableColumn<>("Ders Kodu");
         colCode.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getId()));
         colCode.setCellFactory(customCellFactory);
         colCode.setPrefWidth(120); // Genişlik verildi
 
-        TableColumn<Course, String> colDur = new TableColumn<>("Duration");
+        TableColumn<Course, String> colDur = new TableColumn<>("Süre");
         colDur.setCellValueFactory(
                 cell -> new SimpleStringProperty(String.valueOf(cell.getValue().getDurationMinutes())));
         colDur.setCellFactory(customCellFactory);
         colDur.setPrefWidth(70); // Genişlik verildi
 
-        TableColumn<Course, String> colDate = new TableColumn<>("Date");
+        TableColumn<Course, String> colDate = new TableColumn<>("Tarih");
         colDate.setCellValueFactory(cell -> new SimpleStringProperty(getCourseDate(cell.getValue().getId())));
         colDate.setCellFactory(customCellFactory);
         colDate.setPrefWidth(100); // Genişlik verildi
@@ -1717,7 +1717,7 @@ public class MainApp extends Application {
         colRooms.setCellFactory(customCellFactory);
         colRooms.setPrefWidth(150); // Genişlik verildi
 
-        TableColumn<Course, String> colCount = new TableColumn<>("Students");
+        TableColumn<Course, String> colCount = new TableColumn<>("Öğrenciler");
         colCount.setCellValueFactory(
                 cell -> new SimpleStringProperty(String.valueOf(getCourseStudentCount(cell.getValue().getId()))));
         colCount.setCellFactory(customCellFactory);
@@ -1772,13 +1772,13 @@ public class MainApp extends Application {
         styleTableView(table);
 
         // 1. ID
-        TableColumn<Classroom, String> colId = new TableColumn<>("Classroom ID");
+        TableColumn<Classroom, String> colId = new TableColumn<>("Derslik No");
         colId.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getId()));
         colId.setMinWidth(150);
         colId.setPrefWidth(200);
 
         // 2. Capacity
-        TableColumn<Classroom, String> colCap = new TableColumn<>("Capacity");
+        TableColumn<Classroom, String> colCap = new TableColumn<>("Kapasite");
         colCap.setCellValueFactory(cell -> new SimpleStringProperty(String.valueOf(cell.getValue().getCapacity())));
         colCap.setMinWidth(80);
         colCap.setPrefWidth(100);
@@ -1858,14 +1858,14 @@ public class MainApp extends Application {
         HBox header = new HBox(15);
         header.setAlignment(Pos.CENTER_LEFT);
 
-        Button btnBack = new Button("← Back");
+        Button btnBack = new Button("← Geri");
         String btnColor = isDarkMode ? DARK_BTN : LIGHT_BTN;
         String btnText = isDarkMode ? DARK_TEXT : LIGHT_TEXT;
         btnBack.setStyle("-fx-background-color: " + btnColor + "; -fx-text-fill: " + btnText +
                 "; -fx-background-radius: 4; -fx-border-color: #666; -fx-border-radius: 4; -fx-cursor: hand; -fx-font-weight: bold;");
         btnBack.setOnAction(e -> showClassroomList(txtSearch.getText()));
 
-        Label lblTitle = new Label("Classroom: " + classroom.getId() + " (Capacity: " + classroom.getCapacity() + ")");
+        Label lblTitle = new Label("Derslik: " + classroom.getId() + " (Capacity: " + classroom.getCapacity() + ")");
         lblTitle.setFont(Font.font("Segoe UI", FontWeight.BOLD, 20)); // Başlık fontu büyütüldü
         lblTitle.setTextFill(Color.web(isDarkMode ? "white" : "#333"));
 
@@ -1881,7 +1881,7 @@ public class MainApp extends Application {
         scheduleTable.setMaxHeight(Double.MAX_VALUE);
 
         // --- KOLONLAR ---
-        TableColumn<DayRow, String> colDate = new TableColumn<>("Date");
+        TableColumn<DayRow, String> colDate = new TableColumn<>("Tarih");
         colDate.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getDate()));
         colDate.setStyle("-fx-alignment: CENTER-LEFT;");
 
@@ -1889,7 +1889,7 @@ public class MainApp extends Application {
         colTime.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getTime()));
         colTime.setStyle("-fx-alignment: CENTER-LEFT;");
 
-        TableColumn<DayRow, String> colCourse = new TableColumn<>("Course");
+        TableColumn<DayRow, String> colCourse = new TableColumn<>("Ders");
         colCourse.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getCourseId()));
         colCourse.setStyle("-fx-alignment: CENTER-LEFT; -fx-font-weight: bold;");
 
@@ -1962,7 +1962,7 @@ public class MainApp extends Application {
         styleTableView(table);
 
         // 2. Kolonları HER DURUMDA tanımla
-        TableColumn<DayRow, String> colDate = new TableColumn<>("Date");
+        TableColumn<DayRow, String> colDate = new TableColumn<>("Tarih");
         colDate.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getDate()));
 
         TableColumn<DayRow, String> colTime = new TableColumn<>("Time");
@@ -1971,10 +1971,10 @@ public class MainApp extends Application {
         TableColumn<DayRow, String> colRoom = new TableColumn<>("Room");
         colRoom.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getRoom()));
 
-        TableColumn<DayRow, String> colCourse = new TableColumn<>("Course");
+        TableColumn<DayRow, String> colCourse = new TableColumn<>("Ders");
         colCourse.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getCourseId()));
 
-        TableColumn<DayRow, String> colCount = new TableColumn<>("Students");
+        TableColumn<DayRow, String> colCount = new TableColumn<>("Öğrenciler");
         colCount.setCellValueFactory(
                 cell -> new SimpleStringProperty(String.valueOf(cell.getValue().getStudentCount())));
 
@@ -2066,11 +2066,11 @@ public class MainApp extends Application {
         dropZone.setStyle("-fx-border-color: " + borderCol + "; -fx-border-style: dashed; -fx-border-width: 2; " +
                 "-fx-background-color: " + panel + "; -fx-background-radius: 5; -fx-border-radius: 5;");
 
-        Label lblInstruction = new Label("Drag and drop CSV files here");
+        Label lblInstruction = new Label("CSV dosyalarını buraya sürükleyip bırakın");
         lblInstruction.setTextFill(Color.web(text));
         lblInstruction.setFont(Font.font("Arial", FontWeight.BOLD, 14));
 
-        Label lblSub = new Label("Supported Formats: Students, Courses, Classrooms, Attendance");
+        Label lblSub = new Label("Desteklenen Biçimler: Öğrenciler, Dersler, Derslikler, Yoklama");
         lblSub.setStyle(
                 "-fx-background-color: " + (isDarkMode ? "rgba(88, 166, 255, 0.1)" : "rgba(0, 90, 158, 0.1)") + ";" +
                         "-fx-text-fill: " + (isDarkMode ? "#58A6FF" : "#005A9E") + ";" +
@@ -2083,7 +2083,7 @@ public class MainApp extends Application {
         lblSub.setAlignment(Pos.CENTER);
         lblSub.setMaxWidth(Double.MAX_VALUE);
 
-        Button btnBrowse = new Button("Browse Files");
+        Button btnBrowse = new Button("Dosyalara Gözat");
         btnBrowse.setStyle("-fx-background-color: " + ACCENT_COLOR + "; -fx-text-fill: white; -fx-cursor: hand;");
 
         btnBrowse.setOnAction(e -> {
@@ -2114,7 +2114,7 @@ public class MainApp extends Application {
         });
 
         // 2. FILE LIST
-        Label lblListHeader = new Label("Loaded Files (Select to Include):");
+        Label lblListHeader = new Label("Yüklü Dosyalar (Dahil etmek için seçin):");
         lblListHeader.setTextFill(Color.web(text));
         lblListHeader.setFont(Font.font("Arial", FontWeight.BOLD, 12));
 
@@ -2184,7 +2184,7 @@ public class MainApp extends Application {
         // Üst çizgi stili
         bottomBar.setStyle("-fx-background-color: " + panel + "; -fx-border-color: #666; -fx-border-width: 1 0 0 0;");
 
-        Button btnClose = new Button("Close");
+        Button btnClose = new Button("Kapat");
         // btnClose.setMaxWidth(Double.MAX_VALUE);
         btnClose.setStyle("-fx-background-color: " + btnBg + "; -fx-text-fill: " + text + ";");
         btnClose.setOnAction(e -> dialog.close());
@@ -2202,7 +2202,7 @@ public class MainApp extends Application {
         Stage dialog = new Stage();
         dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.initOwner(owner);
-        dialog.setTitle("Export Data");
+        dialog.setTitle("Veriyi Dışa Aktar");
         dialog.setMinWidth(520);
         dialog.setMinHeight(400);
 
@@ -2228,11 +2228,11 @@ public class MainApp extends Application {
         lblIcon.setStyle("-fx-font-size: 28px;");
 
         VBox headerText = new VBox(3);
-        Label lblTitle = new Label("Export Configuration");
+        Label lblTitle = new Label("Yapılandırmayı Dışa Aktar");
         lblTitle.setFont(Font.font("Segoe UI", FontWeight.BOLD, 16));
         lblTitle.setTextFill(Color.web(textColor));
 
-        Label lblDesc = new Label("Select format to save current schedule data.");
+        Label lblDesc = new Label("Mevcut program verisini kaydetmek için biçim seçin.");
         lblDesc.setFont(Font.font("Segoe UI", 12));
         lblDesc.setTextFill(Color.web(isDarkMode ? "#AAAAAA" : "#666666"));
 
@@ -2254,11 +2254,11 @@ public class MainApp extends Application {
                 + "; -fx-border-radius: 4; -fx-background-radius: 4; -fx-padding: 8;";
 
         // Export Type
-        Label lblType = new Label("Export Type");
+        Label lblType = new Label("Dışa Aktarma Türü");
         lblType.setStyle(labelStyle);
 
         ComboBox<String> cmbType = new ComboBox<>(FXCollections.observableArrayList(
-                "Student List", "Exam Schedule (Detailed per Student)", "Course Schedule (Exams Tab)", "Day Schedule"));
+                "Student List", "Exam Schedule (Detailed per Student)", "Course Schedule (Exams Tab)", "Gün Programı"));
         cmbType.getSelectionModel().selectFirst();
         cmbType.setMaxWidth(Double.MAX_VALUE);
         cmbType.setStyle(inputStyle);
@@ -2292,7 +2292,7 @@ public class MainApp extends Application {
         });
 
         // File Name
-        Label lblName = new Label("File Name");
+        Label lblName = new Label("Dosya Adı");
         lblName.setStyle(labelStyle);
 
         TextField txtName = new TextField("export_data");
@@ -2321,7 +2321,7 @@ public class MainApp extends Application {
         String btnFont = "-fx-cursor: hand; -fx-font-weight: bold; -fx-font-size: 12px; -fx-background-radius: 4; -fx-border-radius: 4;";
 
         // Close Butonu
-        Button btnClose = new Button("Close");
+        Button btnClose = new Button("Kapat");
         btnClose.setStyle(btnFont + btnSize + "-fx-background-color: transparent; -fx-text-fill: "
                 + (isDarkMode ? "#AAAAAA" : "#666666") + "; -fx-border-color: " + borderColor + ";");
         btnClose.setOnAction(e -> dialog.close());
@@ -2351,7 +2351,7 @@ public class MainApp extends Application {
                     showInfoDialog("Success", "Excel exported: " + file.getName());
                     dialog.close();
                 } catch (Exception ex) {
-                    showErrorDialog("Error", ex.getMessage());
+                    showErrorDialog("Hata", ex.getMessage());
                 }
             }
         });
@@ -2364,7 +2364,7 @@ public class MainApp extends Application {
                     showInfoDialog("Success", "PDF exported: " + file.getName());
                     dialog.close();
                 } catch (Exception ex) {
-                    showErrorDialog("Error", ex.getMessage());
+                    showErrorDialog("Hata", ex.getMessage());
                 }
             }
         });
@@ -2404,13 +2404,13 @@ public class MainApp extends Application {
         java.time.format.DateTimeFormatter dtf = java.time.format.DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
         if ("Student List".equals(type)) {
-            rows.add(new String[] { "Student ID", "Total Exams" });
+            rows.add(new String[] { "Öğrenci No", "Total Exams" });
             for (Student s : allStudents) {
                 List<StudentExam> exams = studentScheduleMap.getOrDefault(s.getId(), Collections.emptyList());
                 rows.add(new String[] { s.getId(), String.valueOf(exams.size()) });
             }
         } else if ("Exam Schedule (Detailed per Student)".equals(type)) {
-            rows.add(new String[] { "Student ID", "Course ID", "Date", "Time", "Room", "Seat" });
+            rows.add(new String[] { "Öğrenci No", "Ders No", "Tarih", "Time", "Room", "Seat" });
             List<StudentExam> all = new ArrayList<>();
             studentScheduleMap.values().forEach(all::addAll);
             all.sort(Comparator.comparing(StudentExam::getStudentId));
@@ -2425,10 +2425,10 @@ public class MainApp extends Application {
                 }
             }
         } else if ("Course Schedule (Exams Tab)".equals(type)) {
-            rows.add(new String[] { "Course Code", "Date", "Time", "Rooms", "Students", "Status" });
+            rows.add(new String[] { "Ders Kodu", "Tarih", "Time", "Rooms", "Öğrenciler", "Status" });
             rows.addAll(buildScheduleExportRowsByCourse());
-        } else if ("Day Schedule".equals(type)) {
-            rows.add(new String[] { "Date", "Time", "Room", "Course", "Student Count" });
+        } else if ("Gün Programı".equals(type)) {
+            rows.add(new String[] { "Tarih", "Time", "Room", "Ders", "Student Count" });
             for (DayRow r : masterDayList) {
                 rows.add(new String[] { r.getDate(), r.getTime(), r.getRoom(), r.getCourseId(),
                         String.valueOf(r.getStudentCount()) });
@@ -2587,7 +2587,7 @@ public class MainApp extends Application {
 
             // A) STUDENT LIST
             if ("Student List".equals(type)) {
-                writer.write("Student ID" + SEP + "Total Exams");
+                writer.write("Öğrenci No" + SEP + "Total Exams");
                 writer.newLine();
 
                 for (Student s : allStudents) {
@@ -2600,7 +2600,7 @@ public class MainApp extends Application {
             // B) EXAM SCHEDULE (Detailed per Student)
             else if ("Exam Schedule (Detailed per Student)".equals(type)) {
                 writer.write(
-                        "Student ID" + SEP + "Course ID" + SEP + "Date" + SEP + "Time" + SEP + "Room" + SEP + "Seat");
+                        "Öğrenci No" + SEP + "Ders No" + SEP + "Tarih" + SEP + "Time" + SEP + "Room" + SEP + "Seat");
                 writer.newLine();
 
                 // Sıralı çıktı için listeyi toparlayalım
@@ -2631,7 +2631,7 @@ public class MainApp extends Application {
             }
             // C) COURSE SCHEDULE
             else if ("Course Schedule (Exams Tab)".equals(type)) {
-                writer.write("Course Code" + SEP + "Duration (min)" + SEP + "Date" + SEP + "Time" + SEP + "Rooms" + SEP
+                writer.write("Ders Kodu" + SEP + "Süre (dk)" + SEP + "Tarih" + SEP + "Time" + SEP + "Rooms" + SEP
                         + "Student Count" + SEP + "Status");
                 writer.newLine();
 
@@ -2668,8 +2668,8 @@ public class MainApp extends Application {
                 }
             }
             // D) DAY SCHEDULE
-            else if ("Day Schedule".equals(type)) {
-                writer.write("Date" + SEP + "Time" + SEP + "Room" + SEP + "Course" + SEP + "Student Count");
+            else if ("Gün Programı".equals(type)) {
+                writer.write("Tarih" + SEP + "Time" + SEP + "Room" + SEP + "Ders" + SEP + "Student Count");
                 writer.newLine();
 
                 for (DayRow row : masterDayList) {
@@ -2707,7 +2707,7 @@ public class MainApp extends Application {
 
                 // Başlık Satırı
                 writer.write(
-                        "Student ID" + SEP + "Course ID" + SEP + "Date" + SEP + "Time" + SEP + "Room" + SEP + "Seat");
+                        "Öğrenci No" + SEP + "Ders No" + SEP + "Tarih" + SEP + "Time" + SEP + "Room" + SEP + "Seat");
                 writer.newLine();
 
                 List<StudentExam> exams = studentScheduleMap.getOrDefault(student.getId(), Collections.emptyList());
@@ -2795,7 +2795,7 @@ public class MainApp extends Application {
         boolean dataLoaded = !allStudents.isEmpty();
 
         if (!filesSelected) {
-            text = "No files selected.\nClick 'Import' to choose your data files.";
+            text = "Dosya seçilmedi.\nVeri dosyalarını seçmek için 'İçe Aktar'a tıklayın.";
         } else if (!dataLoaded) {
             text = "Files are ready.\nClick 'Apply Schedule' to load data and generate the plan.";
         } else {
@@ -2852,15 +2852,15 @@ public class MainApp extends Application {
         String accentColor;
         String iconSymbol;
 
-        if (title.contains("Period")) {
+        if (title.contains("Period") || title.contains("Dönem") || title.contains("Tarih")) {
             accentColor = "#0078D7"; // Mavi
-            iconSymbol = "\u25A6"; // ▦ (Schedule/Grid Görünümü)
-        } else if (title.contains("Constraints")) {
+            iconSymbol = "\u25A6";
+        } else if (title.contains("Constraints") || title.contains("Kısıt")) {
             accentColor = "#D97706"; // Turuncu
-            iconSymbol = "\u23F1"; // ⏱ (Saat)
-        } else { // Customization
+            iconSymbol = "\u23F1";
+        } else { // Customization / Özelleştirme
             accentColor = "#7C3AED"; // Mor
-            iconSymbol = "\u2699"; // ⚙ (Çark)
+            iconSymbol = "\u2699";
         }
 
         // Sol taraftaki renkli ince çizgi stili
@@ -2895,8 +2895,8 @@ public class MainApp extends Application {
 
             btnInfo.setOnAction(e -> {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle(title.trim() + " Help");
-                alert.setHeaderText(title.trim() + " Guide");
+                alert.setTitle(title.trim() + " Yardım");
+                alert.setHeaderText(title.trim() + " Kılavuzu");
                 alert.setContentText(helpContent);
                 styleDialog(alert);
                 alert.showAndWait();
@@ -3192,7 +3192,7 @@ public class MainApp extends Application {
         Stage dialog = new Stage();
         dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.initOwner(owner);
-        dialog.setTitle("Customize Exam Rules");
+        dialog.setTitle("Sınav Kurallarını Özelleştir");
 
         BorderPane mainLayout = new BorderPane();
         String bg = isDarkMode ? DARK_BG : LIGHT_BG;
@@ -3200,7 +3200,7 @@ public class MainApp extends Application {
         String text = isDarkMode ? DARK_TEXT : LIGHT_TEXT;
         mainLayout.setStyle("-fx-background-color: " + bg + ";");
 
-        Label headerDesc = new Label("Add custom constraints for specific courses (e.g., Duration, Capacity).");
+        Label headerDesc = new Label("Belirli dersler için özel kısıtlar ekleyin (ör. Süre, Kapasite).");
         headerDesc.setWrapText(true);
         headerDesc.setTextFill(Color.web(isDarkMode ? "#AAAAAA" : "#666666"));
         headerDesc.setPadding(new Insets(15));
@@ -3222,7 +3222,7 @@ public class MainApp extends Application {
         bottomBar.setStyle("-fx-background-color: " + (isDarkMode ? DARK_PANEL : LIGHT_PANEL)
                 + "; -fx-border-color: #666; -fx-border-width: 1 0 0 0;");
 
-        Button btnClose = new Button("Close");
+        Button btnClose = new Button("Kapat");
         btnClose.setStyle("-fx-background-color: " + btnBg + "; -fx-text-fill: " + text + ";");
         btnClose.setOnAction(e -> dialog.close());
 
@@ -3303,12 +3303,12 @@ public class MainApp extends Application {
             // 1. Başlık
             HBox topRow = new HBox();
             topRow.setAlignment(Pos.CENTER_LEFT);
-            Label title = new Label("Rule Group");
+            Label title = new Label("Kural Grubu");
             title.setFont(Font.font("Arial", FontWeight.BOLD, 14));
             title.setTextFill(Color.web(isDarkMode ? DARK_TEXT : LIGHT_TEXT));
             Region spacer = new Region();
             HBox.setHgrow(spacer, Priority.ALWAYS);
-            Button btnRemove = new Button("Remove");
+            Button btnRemove = new Button("Kaldır");
             btnRemove.setStyle(
                     "-fx-background-color: transparent; -fx-text-fill: #FF6B6B; -fx-border-color: #FF6B6B; -fx-border-radius: 3;");
             btnRemove.setOnAction(e -> removeSelf());
@@ -3317,10 +3317,10 @@ public class MainApp extends Application {
             // 2. Seçim Butonu
             HBox selectionRow = new HBox(10);
             selectionRow.setAlignment(Pos.CENTER_LEFT);
-            Button btnSelectCourses = new Button("Select Courses...");
+            Button btnSelectCourses = new Button("Ders Seçin...");
             btnSelectCourses.setStyle("-fx-background-color: #444; -fx-text-fill: white;");
             btnSelectCourses.setOnAction(e -> openMultiSelectDialog());
-            lblSelectionInfo = new Label("No courses selected");
+            lblSelectionInfo = new Label("Ders seçilmedi");
             lblSelectionInfo.setTextFill(Color.GRAY);
             selectionRow.getChildren().addAll(btnSelectCourses, lblSelectionInfo);
 
@@ -3335,7 +3335,7 @@ public class MainApp extends Application {
                     + "; -fx-prompt-text-fill: " + promptColor + ";";
 
             // Duration
-            Label lblDur = new Label("Duration (min):");
+            Label lblDur = new Label("Süre (dk):");
             lblDur.setTextFill(Color.web(inputText));
             txtDuration = new TextField();
             txtDuration.setPromptText("Keep Orig.");
@@ -3343,7 +3343,7 @@ public class MainApp extends Application {
             txtDuration.setPrefWidth(90);
 
             // Min Cap
-            Label lblMin = new Label("Min Room Cap:");
+            Label lblMin = new Label("Min. Derslik Kap.:");
             lblMin.setTextFill(Color.web(inputText));
             txtMinCap = new TextField();
             txtMinCap.setPromptText("0 (Any)");
@@ -3351,7 +3351,7 @@ public class MainApp extends Application {
             txtMinCap.setPrefWidth(90);
 
             // Max Cap
-            Label lblMax = new Label("Max Room Cap:");
+            Label lblMax = new Label("Maks. Derslik Kap.:");
             lblMax.setTextFill(Color.web(inputText));
             txtMaxCap = new TextField();
             txtMaxCap.setPromptText("0 (No Limit)");
@@ -3359,7 +3359,7 @@ public class MainApp extends Application {
             txtMaxCap.setPrefWidth(90);
 
             // --- Exclude Checkbox ---
-            cbIgnore = new CheckBox("Exclude from Schedule (Ignore)");
+            cbIgnore = new CheckBox("Programdan Çıkar (Yok Say)");
             cbIgnore.setTextFill(Color.web(isDarkMode ? "#FF6B6B" : "#D32F2F")); // Kırmızımsı renk
             cbIgnore.setFont(Font.font("Arial", FontWeight.BOLD, 12));
 
@@ -3421,7 +3421,7 @@ public class MainApp extends Application {
                 }
             }
 
-            TextField search = createStyledTextField("Search...");
+            TextField search = createStyledTextField("Ara...");
             ListView<Course> listView = new ListView<>();
             listView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
             listView.setStyle("-fx-background-color: " + listBg + "; -fx-control-inner-background: " + listBg + ";");
@@ -3488,7 +3488,7 @@ public class MainApp extends Application {
                 }
             });
 
-            Button btnDone = new Button("Done");
+            Button btnDone = new Button("Tamam");
             btnDone.setMaxWidth(Double.MAX_VALUE);
             btnDone.setStyle("-fx-background-color: " + ACCENT_COLOR + "; -fx-text-fill: white;");
             btnDone.setOnAction(e -> subStage.close());
@@ -3610,10 +3610,10 @@ public class MainApp extends Application {
         HBox btnBox = new HBox(10);
         btnBox.setAlignment(Pos.CENTER_RIGHT);
 
-        Button btnCancel = new Button("Cancel");
+        Button btnCancel = new Button("İptal");
         btnCancel.setStyle("-fx-background-color: " + btnBg + "; -fx-text-fill: " + text + ";");
 
-        Button btnOk = new Button("Remove");
+        Button btnOk = new Button("Kaldır");
         btnOk.setStyle("-fx-background-color: #D32F2F; -fx-text-fill: white; -fx-font-weight: bold;"); // Kırmızı vurgu
 
         final boolean[] result = { false };
@@ -3644,9 +3644,9 @@ public class MainApp extends Application {
                 String name = f.getName();
                 String type = "Unknown"; // Basit tip tahmini
                 if (name.toLowerCase().contains("student"))
-                    type = "Students";
+                    type = "Öğrenciler";
                 else if (name.toLowerCase().contains("course"))
-                    type = "Courses";
+                    type = "Dersler";
                 else if (name.toLowerCase().contains("capacities") || name.toLowerCase().contains("classroom"))
                     type = "Rooms";
                 else if (name.toLowerCase().contains("attendance"))
@@ -3688,7 +3688,7 @@ public class MainApp extends Application {
         Stage dialog = new Stage();
         dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.initOwner(primaryStage);
-        dialog.setTitle("Application Guide & Help");
+        dialog.setTitle("Uygulama Kılavuzu ve Yardım");
 
         BorderPane root = new BorderPane();
         String bg = isDarkMode ? DARK_PANEL : LIGHT_PANEL;
@@ -3700,7 +3700,7 @@ public class MainApp extends Application {
         VBox content = new VBox(15);
         content.setPadding(new Insets(20));
 
-        Label mainHeader = new Label("Exam Management System Guide");
+        Label mainHeader = new Label("Sınav Yönetim Sistemi Kılavuzu");
         mainHeader.setFont(Font.font("Arial", FontWeight.BOLD, 22));
         mainHeader.setTextFill(Color.web(text));
         content.getChildren().add(mainHeader);
@@ -3736,7 +3736,7 @@ public class MainApp extends Application {
         // Üst çizgi ve arka plan rengi
         bottomBar.setStyle("-fx-background-color: " + bg + "; -fx-border-color: #666; -fx-border-width: 1 0 0 0;");
 
-        Button btnClose = new Button("Close");
+        Button btnClose = new Button("Kapat");
         btnClose.setStyle("-fx-background-color: " + btnBg + "; -fx-text-fill: " + text + ";");
         btnClose.setOnAction(e -> dialog.close());
 
